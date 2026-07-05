@@ -47,16 +47,22 @@ namespace LED_DDP_DRIVER.ViewModels
             LoadApplicationSettings();
             WeakReferenceMessenger.Default.Register<LogMessage>(this, (recipient, message) =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     if (message.Type == LogType.Info)
                     {
-                        InfoLogs += message.Message + Environment.NewLine;
+                        string newInfo = InfoLogs + message.Message + Environment.NewLine;
+                        if (newInfo.Length > 1000) newInfo = newInfo.Substring(newInfo.Length - 1000);
+
+                        InfoLogs = newInfo;
                         OnInfoLogAdded?.Invoke();
                     }
                     else if (message.Type == LogType.Ddp)
                     {
-                        DdpLogs += message.Message + Environment.NewLine;
+                        string newDdp = DdpLogs + message.Message + Environment.NewLine;
+                        if (newDdp.Length > 1000) newDdp = newDdp.Substring(newDdp.Length - 1000);
+
+                        DdpLogs = newDdp;
                         OnDdpLogAdded?.Invoke();
                     }
                 });
