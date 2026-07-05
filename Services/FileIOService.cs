@@ -73,5 +73,39 @@ namespace LED_DDP_DRIVER.Services
             }
             return defaultConfig;
         }
+        public AudioConfig LoadAudioSettings()
+        {
+            string audioFilePath = Path.Combine(_folderPath, "audio_settings.json");
+            try
+            {
+                if (!File.Exists(audioFilePath))
+                {
+                    var defaultConfig = new AudioConfig();
+                    SaveAudioConfig(defaultConfig);
+                    return defaultConfig;
+                }
+
+                string jsonString = File.ReadAllText(audioFilePath);
+                return JsonSerializer.Deserialize<AudioConfig>(jsonString) ?? new AudioConfig();
+            }
+            catch
+            {
+                return new AudioConfig();
+            }
+        }
+
+        public void SaveAudioConfig(AudioConfig config)
+        {
+            string audioFilePath = Path.Combine(_folderPath, "audio_settings.json");
+            try
+            {
+                string jsonString = JsonSerializer.Serialize(config, _jsonOptions);
+                File.WriteAllText(audioFilePath, jsonString);
+            }
+            catch (Exception ex)
+            {
+                Logger.Info($"ERROR while saving audio settings: {ex.Message}");
+            }
+        }
     }
 }

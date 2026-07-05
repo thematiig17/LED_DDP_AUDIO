@@ -5,6 +5,7 @@ using LED_DDP_DRIVER.Models;
 using LED_DDP_DRIVER.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -32,7 +33,8 @@ namespace LED_DDP_DRIVER.ViewModels
 
         // Audio
         public List<IAudioMode> AvailableModes { get; set; }
-        public AudioConfig AudioSettings { get; } = new AudioConfig();
+        public AudioConfig AudioSettings { get; private set; } = new AudioConfig();
+        private CancellationTokenSource _saveDebounceTokenSource;
 
         // Data for current color display
         [ObservableProperty] private byte _currentR;
@@ -85,8 +87,10 @@ namespace LED_DDP_DRIVER.ViewModels
             var config = _fileService.LoadSettings();
             IpAddress = config.IpAddress;
             Port = config.Port;
-            Logger.Info("Init complete.");
+            AudioSettings = _fileService.LoadAudioSettings();
+            AudioSettings.PropertyChanged += OnAudioSettingsChanged;
             AvailableModes = AudioModeRegistry.GetAvailableModes();
+            Logger.Info("Init complete.");
         }
         private async void SimulateLogs()
         {
@@ -137,6 +141,27 @@ namespace LED_DDP_DRIVER.ViewModels
                 _ddpEngine = null;
                 Logger.Info("DDP Service stopped.");
             }
+        }
+        private void OnAudioSettingsChanged(object sender, PropertyChangedEventArgs e)
+        {
+            _saveDebounceTokenSource?.Cancel();
+            _saveDebounceTokenSource = new CancellationTokenSource();
+            var token = _saveDebounceTokenSource.Token;
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(2000, token);
+                    _fileService.SaveAudioConfig(AudioSettings);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Logger.Info("Auto saved audio settings.");
+                    });
+                }
+                catch (TaskCanceledException)
+                {
+                }
+            });
         }
     }
 }
