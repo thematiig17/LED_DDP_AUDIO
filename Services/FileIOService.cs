@@ -54,6 +54,17 @@ namespace LED_DDP_DRIVER.Services
                 return new AppConfig();
             }
         }
+        public void SaveSettings(AppConfig config)
+        {
+            try
+            {
+                string jsonString = JsonSerializer.Serialize(config, _jsonOptions);
+                File.WriteAllText(_filePath, jsonString);
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         /// <summary>
         /// Creates file structure and uses defaults.

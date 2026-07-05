@@ -23,6 +23,7 @@ namespace LED_DDP_DRIVER.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(FullAddress))]
         private int _port;
+        private CancellationTokenSource _settingsDebounceTokenSource;
         public string FullAddress => $"Current settings: {IpAddress}:{Port}";
 
         [ObservableProperty] private string _infoLogs = string.Empty;
@@ -156,6 +157,43 @@ namespace LED_DDP_DRIVER.ViewModels
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Logger.Info("Auto saved audio settings.");
+                    });
+                }
+                catch (TaskCanceledException)
+                {
+                }
+            });
+        }
+        partial void OnIpAddressChanged(string value)
+        {
+            TriggerSettingsSave();
+        }
+
+        partial void OnPortChanged(int value)
+        {
+            TriggerSettingsSave();
+        }
+        private void TriggerSettingsSave()
+        {
+            _settingsDebounceTokenSource?.Cancel();
+            _settingsDebounceTokenSource = new CancellationTokenSource();
+            var token = _settingsDebounceTokenSource.Token;
+
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(2000, token);
+
+                    var configToSave = new AppConfig
+                    {
+                        IpAddress = this.IpAddress,
+                        Port = this.Port
+                    };
+                    _fileService.SaveSettings(configToSave);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Logger.Info("Auto saved config.");
                     });
                 }
                 catch (TaskCanceledException)
