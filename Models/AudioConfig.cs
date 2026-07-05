@@ -22,6 +22,11 @@ namespace LED_DDP_DRIVER.Models
         [ObservableProperty] private float _midDecay = 0.85f;
         [ObservableProperty] private float _highDecay = 0.90f;
 
+        // Mutes
+        [ObservableProperty] private bool _isBassEnabled = true;
+        [ObservableProperty] private bool _isMidEnabled = true;
+        [ObservableProperty] private bool _isHighEnabled = true;
+
         // Others
         [ObservableProperty] private float _decay = 0.85f;
         [ObservableProperty] private float _masterBrightness = 1.0f;

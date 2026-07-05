@@ -53,17 +53,17 @@ namespace LED_DDP_DRIVER.Models
 
                 if (hz >= 20 && hz < 300)
                 {
-                    mag = mag >= _config.BassThreshold ? (mag - _config.BassThreshold) * _config.BassGain : 0;
+                    mag = (_config.IsBassEnabled && mag >= _config.BassThreshold) ? (mag - _config.BassThreshold) * _config.BassGain : 0;
                     currentDecay = _config.BassDecay;
                 }
                 else if (hz >= 300 && hz < 4000)
                 {
-                    mag = mag >= _config.MidThreshold ? (mag - _config.MidThreshold) * _config.MidGain : 0;
+                    mag = (_config.IsMidEnabled && mag >= _config.MidThreshold) ? (mag - _config.MidThreshold) * _config.MidGain : 0;
                     currentDecay = _config.MidDecay;
                 }
                 else if (hz >= 4000 && hz <= 15000)
                 {
-                    mag = mag >= _config.HighThreshold ? (mag - _config.HighThreshold) * _config.HighGain : 0;
+                    mag = (_config.IsHighEnabled && mag >= _config.HighThreshold) ? (mag - _config.HighThreshold) * _config.HighGain : 0;
                     currentDecay = _config.HighDecay;
                 }
                 else
