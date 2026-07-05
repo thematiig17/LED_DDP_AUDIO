@@ -11,13 +11,17 @@ namespace LED_DDP_DRIVER.Models
     {
         private readonly AudioService _audioService;
         private readonly UDPService _udpService;
+        private readonly AudioConfig _config;
         public IAudioMode ActiveMode { get; set; }
+        private float[] _smoothedMagnitudes;
 
-        public DDPEngine(AudioService audioService, UDPService udpService, IAudioMode defaultMode)
+        public DDPEngine(AudioService audioService, UDPService udpService, IAudioMode defaultMode, AudioConfig config)
         {
             _audioService = audioService;
             _udpService = udpService;
             ActiveMode = defaultMode;
+            _config = config;
+            _smoothedMagnitudes = new float[512];
 
             _audioService.OnFftCalculated += HandleFftData;
         }
@@ -37,10 +41,57 @@ namespace LED_DDP_DRIVER.Models
         private void HandleFftData(object sender, FftEventArgs e)
         {
             if (ActiveMode == null) return;
-            var colors = ActiveMode.CalculateColors(e.Magnitudes, e.HzPerBin);
-            Logger.Ddp($"[DDP] Sending: R={colors.R}, G={colors.G}, B={colors.B}");
-            _udpService.SendDdpPacket(colors.R, colors.G, colors.B);
-            WeakReferenceMessenger.Default.Send(new DdpColorMessage(colors.R, colors.G, colors.B));
+
+            float[] processedMagnitudes = new float[e.Magnitudes.Length];
+
+            //Pre-processing
+            for (int i = 0; i < e.Magnitudes.Length; i++)
+            {
+                float hz = i * e.HzPerBin;
+                float mag = e.Magnitudes[i];
+                float currentDecay = 0f;
+
+                if (hz >= 20 && hz < 300)
+                {
+                    mag = mag >= _config.BassThreshold ? (mag - _config.BassThreshold) * _config.BassGain : 0;
+                    currentDecay = _config.BassDecay;
+                }
+                else if (hz >= 300 && hz < 4000)
+                {
+                    mag = mag >= _config.MidThreshold ? (mag - _config.MidThreshold) * _config.MidGain : 0;
+                    currentDecay = _config.MidDecay;
+                }
+                else if (hz >= 4000 && hz <= 15000)
+                {
+                    mag = mag >= _config.HighThreshold ? (mag - _config.HighThreshold) * _config.HighGain : 0;
+                    currentDecay = _config.HighDecay;
+                }
+                else
+                {
+                    mag = 0;
+                }
+
+                // Decay smoothing
+                if (mag > _smoothedMagnitudes[i])
+                {
+                    _smoothedMagnitudes[i] = mag;
+                }
+                else
+                {
+                    _smoothedMagnitudes[i] *= currentDecay;
+                }
+                processedMagnitudes[i] = _smoothedMagnitudes[i];
+            }
+
+            var colors = ActiveMode.CalculateColors(processedMagnitudes, e.HzPerBin);
+
+            byte finalR = (byte)(colors.R * _config.MasterBrightness);
+            byte finalG = (byte)(colors.G * _config.MasterBrightness);
+            byte finalB = (byte)(colors.B * _config.MasterBrightness);
+
+            Logger.Ddp($"[DDP] Sending: R={finalR}, G={finalG}, B={finalB}");
+            _udpService.SendDdpPacket(finalR, finalG, finalB);
+            WeakReferenceMessenger.Default.Send(new DdpColorMessage(finalR, finalG, finalB));
         }
     }
 }

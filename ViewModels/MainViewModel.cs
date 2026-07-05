@@ -30,7 +30,9 @@ namespace LED_DDP_DRIVER.ViewModels
         public event Action OnInfoLogAdded;
         public event Action OnDdpLogAdded;
 
+        // Audio
         public List<IAudioMode> AvailableModes { get; set; }
+        public AudioConfig AudioSettings { get; } = new AudioConfig();
 
         // Data for current color display
         [ObservableProperty] private byte _currentR;
@@ -109,7 +111,7 @@ namespace LED_DDP_DRIVER.ViewModels
                 var audio = new AudioService();
                 var udp = new UDPService(IpAddress, Port);
 
-                _ddpEngine = new DDPEngine(audio, udp, AvailableModes[0]);
+                _ddpEngine = new DDPEngine(audio, udp, AvailableModes[0], AudioSettings);
                 _ddpEngine.Start();
 
                 Logger.Info("DDP Service started.");

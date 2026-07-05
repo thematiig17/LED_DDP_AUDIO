@@ -31,13 +31,16 @@ namespace LED_DDP_DRIVER.Models
                 if (hz >= 4000 && hz <= 15000) highEnergy += magnitude;
             }
 
-            double bassThreshold = 0.3;
-            double bassGain = 8.0;
-            double highThreshold = 0.15;
-            double highGain = 6.0;
+            double bassThreshold = 0.0;
+            double bassGain = 1.0;
+            double highThreshold = 0.0;
+            double highGain = 1.0;
 
             double targetRed = bassEnergy > bassThreshold ? (bassEnergy - bassThreshold) * bassGain * 255 : 0;
             double targetBlue = highEnergy > highThreshold ? (highEnergy - highThreshold) * highGain * 255 : 0;
+
+            targetRed = Math.Min(255, targetRed);
+            targetBlue = Math.Min(255, targetBlue);
 
             _currentRed = targetRed > _currentRed ? targetRed : _currentRed * 0.85;
             _currentBlue = targetBlue > _currentBlue ? targetBlue : _currentBlue * 0.85;
