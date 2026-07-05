@@ -7,6 +7,7 @@ namespace LED_DDP_DRIVER.Models
 {
     public enum LogType { Info, Ddp }
     public record LogMessage(string Message, LogType Type);
+    public record DdpColorMessage(byte R, byte G, byte B);
 
     public static class Logger
     {

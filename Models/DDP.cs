@@ -1,4 +1,5 @@
-﻿using LED_DDP_DRIVER.Services;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using LED_DDP_DRIVER.Services;
 using NAudio.Dsp;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ namespace LED_DDP_DRIVER.Models
             var colors = ActiveMode.CalculateColors(e.Magnitudes, e.HzPerBin);
             Logger.Ddp($"[DDP] Sending: R={colors.R}, G={colors.G}, B={colors.B}");
             _udpService.SendDdpPacket(colors.R, colors.G, colors.B);
+            WeakReferenceMessenger.Default.Send(new DdpColorMessage(colors.R, colors.G, colors.B));
         }
     }
 }

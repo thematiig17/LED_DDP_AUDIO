@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using System.Windows.Media;
 
 namespace LED_DDP_DRIVER.ViewModels
 {
@@ -31,6 +32,13 @@ namespace LED_DDP_DRIVER.ViewModels
 
         public List<IAudioMode> AvailableModes { get; set; }
 
+        // Data for current color display
+        [ObservableProperty] private byte _currentR;
+        [ObservableProperty] private byte _currentG;
+        [ObservableProperty] private byte _currentB;
+        [ObservableProperty]
+        private SolidColorBrush _masterColorBrush = new SolidColorBrush(Colors.Black);
+
         public MainViewModel()
         {
             _fileService = new FileIOService();
@@ -49,6 +57,16 @@ namespace LED_DDP_DRIVER.ViewModels
                         DdpLogs += message.Message + Environment.NewLine;
                         OnDdpLogAdded?.Invoke();
                     }
+                });
+            });
+            WeakReferenceMessenger.Default.Register<DdpColorMessage>(this, (recipient, message) =>
+            {
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    CurrentR = message.R;
+                    CurrentG = message.G;
+                    CurrentB = message.B;
+                    MasterColorBrush = new SolidColorBrush(Color.FromRgb(message.R, message.G, message.B));
                 });
             });
             //SimulateLogs();
