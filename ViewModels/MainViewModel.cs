@@ -36,6 +36,8 @@ namespace LED_DDP_DRIVER.ViewModels
         public List<IAudioMode> AvailableModes { get; set; }
         public AudioConfig AudioSettings { get; private set; } = new AudioConfig();
         private CancellationTokenSource _saveDebounceTokenSource;
+        [ObservableProperty]
+        private IAudioMode _selectedMode;
 
         // Data for current color display
         [ObservableProperty] private byte _currentR;
@@ -91,6 +93,10 @@ namespace LED_DDP_DRIVER.ViewModels
             AudioSettings = _fileService.LoadAudioSettings();
             AudioSettings.PropertyChanged += OnAudioSettingsChanged;
             AvailableModes = AudioModeRegistry.GetAvailableModes();
+            if (AvailableModes.Count > 0)
+            {
+                SelectedMode = AvailableModes[0];
+            }
             Logger.Info("Init complete.");
         }
         private async void SimulateLogs()
@@ -200,6 +206,14 @@ namespace LED_DDP_DRIVER.ViewModels
                 {
                 }
             });
+        }
+        partial void OnSelectedModeChanged(IAudioMode value)
+        {
+            if (_ddpEngine != null && value != null)
+            {
+                _ddpEngine.ActiveMode = value;
+                Logger.Info($"Changed visualization mode to: {value.Name}");
+            }
         }
     }
 }

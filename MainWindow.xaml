@@ -14,7 +14,7 @@
 
         <StackPanel Grid.Row="0" Margin="0,0,0,0">
             <UniformGrid Columns="2">
-                <GroupBox Header="Pre-Processing" Padding="10" Margin="0,0,0,10" FontWeight="Bold">
+                <GroupBox Header="Pre-Processing" Padding="10" Margin="0,0,0,00" FontWeight="Bold">
                     <StackPanel>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -82,65 +82,82 @@
                         </Border>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="Out Monitor (Telemetry)" Padding="10" Margin="0,0,0,10" FontWeight="Bold">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="1" VerticalAlignment="Top">
+                    <GroupBox Header="Out Monitor (Telemetry)" Padding="10" FontWeight="Bold" Height="120">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="18*"/>
+                                <ColumnDefinition Width="211*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0" Margin="0,0,15,0" VerticalAlignment="Center">
-                            <TextBlock Text="MASTER" TextAlignment="Center" Margin="0,0,0,5" Foreground="Gray" FontWeight="Normal"/>
-                            <Border Width="80" Height="81" CornerRadius="5" Background="{Binding MasterColorBrush}" 
+                            <StackPanel Grid.Column="0" Margin="0,0,15,0" VerticalAlignment="Center">
+                                <TextBlock Text="MASTER" TextAlignment="Center" Margin="0,0,0,5" Foreground="Gray" FontWeight="Normal"/>
+                                <Border Width="80" Height="52" CornerRadius="5" Background="{Binding MasterColorBrush}" 
         BorderBrush="#444" BorderThickness="2">
-                                <Border.Effect>
-                                    <DropShadowEffect Color="Black" BlurRadius="5" Opacity="0.3" ShadowDepth="2"/>
-                                </Border.Effect>
-                            </Border>
-                        </StackPanel>
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="Black" BlurRadius="5" Opacity="0.3" ShadowDepth="2"/>
+                                    </Border.Effect>
+                                </Border>
+                            </StackPanel>
 
-                        <Grid Grid.Column="1" VerticalAlignment="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                            <Grid Grid.Column="1" VerticalAlignment="Center" Grid.ColumnSpan="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                            <Grid Grid.Row="0" Margin="0,0,0,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="35"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="R:" Foreground="Red" FontWeight="Bold" VerticalAlignment="Center"/>
-                                <ProgressBar Grid.Column="1" Value="{Binding CurrentR}" Maximum="255" Height="15" Foreground="Red" Background="#E0E0E0"/>
-                                <TextBlock Grid.Column="2" Text="{Binding CurrentR}" TextAlignment="Right" VerticalAlignment="Center"/>
-                            </Grid>
+                                <Grid Grid.Row="0" Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="35"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="R:" Foreground="Red" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    <ProgressBar Grid.Column="1" Value="{Binding CurrentR}" Maximum="255" Height="15" Foreground="Red" Background="#E0E0E0"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding CurrentR}" TextAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
 
-                            <Grid Grid.Row="1" Margin="0,0,0,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="35"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="G:" Foreground="Green" FontWeight="Bold" VerticalAlignment="Center"/>
-                                <ProgressBar Grid.Column="1" Value="{Binding CurrentG}" Maximum="255" Height="15" Foreground="Green" Background="#E0E0E0"/>
-                                <TextBlock Grid.Column="2" Text="{Binding CurrentG}" TextAlignment="Right" VerticalAlignment="Center"/>
-                            </Grid>
+                                <Grid Grid.Row="1" Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="35"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="G:" Foreground="Green" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    <ProgressBar Grid.Column="1" Value="{Binding CurrentG}" Maximum="255" Height="15" Foreground="Green" Background="#E0E0E0"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding CurrentG}" TextAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
 
-                            <Grid Grid.Row="2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="35"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="B:" Foreground="Blue" FontWeight="Bold" VerticalAlignment="Center"/>
-                                <ProgressBar Grid.Column="1" Value="{Binding CurrentB}" Maximum="255" Height="15" Foreground="DodgerBlue" Background="#E0E0E0"/>
-                                <TextBlock Grid.Column="2" Text="{Binding CurrentB}" TextAlignment="Right" VerticalAlignment="Center"/>
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="35"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="B:" Foreground="Blue" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    <ProgressBar Grid.Column="1" Value="{Binding CurrentB}" Maximum="255" Height="15" Foreground="DodgerBlue" Background="#E0E0E0"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding CurrentB}" TextAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </GroupBox>
+                    </GroupBox>
+                    <GroupBox Header="Visualization Algorithm" Padding="10" FontWeight="Bold" Height="70">
+                        <ComboBox ItemsSource="{Binding AvailableModes}" 
+              SelectedItem="{Binding SelectedMode}" 
+              DisplayMemberPath="Name"
+              Padding="8,5"
+              FontWeight="Normal"
+              Cursor="Hand">
+
+                            <ComboBox.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="3" Opacity="0.1" ShadowDepth="1"/>
+                            </ComboBox.Effect>
+
+                        </ComboBox>
+                    </GroupBox>
+                </StackPanel>
             </UniformGrid>
         </StackPanel>
 
