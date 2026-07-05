@@ -13,6 +13,8 @@ namespace LED_DDP_DRIVER.ViewModels
     public partial class MainViewModel : ObservableObject
     {
         private readonly FileIOService _fileService;
+        private UDPService _udpService;
+        private DDPEngine _ddpEngine;
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(FullAddress))]
         private string _ipAddress;
@@ -26,6 +28,8 @@ namespace LED_DDP_DRIVER.ViewModels
 
         public event Action OnInfoLogAdded;
         public event Action OnDdpLogAdded;
+
+        public List<IAudioMode> AvailableModes { get; set; }
 
         public MainViewModel()
         {
@@ -47,7 +51,7 @@ namespace LED_DDP_DRIVER.ViewModels
                     }
                 });
             });
-            SimulateLogs();
+            //SimulateLogs();
         }
 
         private void LoadApplicationSettings()
@@ -56,6 +60,7 @@ namespace LED_DDP_DRIVER.ViewModels
             IpAddress = config.IpAddress;
             Port = config.Port;
             Logger.Info("Init complete.");
+            AvailableModes = AudioModeRegistry.GetAvailableModes();
         }
         private async void SimulateLogs()
         {
@@ -71,11 +76,41 @@ namespace LED_DDP_DRIVER.ViewModels
             });
         }
         [RelayCommand]
-        private void SaveSettings()
+        private void RunDDPService()
         {
-            // 
+            try
+            {
+                if (_ddpEngine != null)
+                {
+                    Logger.Info("WARN: DDP Service is already running!");
+                    return;
+                }
 
-            Logger.Info("Kliknięto przycisk zapisu ustawień!");
+                Logger.Info("DDP and Audio Service Initialization...");
+
+                var audio = new AudioService();
+                var udp = new UDPService(IpAddress, Port);
+
+                _ddpEngine = new DDPEngine(audio, udp, AvailableModes[0]);
+                _ddpEngine.Start();
+
+                Logger.Info("DDP Service started.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Info($"ERROR DURING STARTUP: {ex.Message}");
+                _ddpEngine = null;
+            }
+        }
+        [RelayCommand]
+        private void StopDDPService()
+        {
+            if (_ddpEngine != null)
+            {
+                _ddpEngine.Stop();
+                _ddpEngine = null;
+                Logger.Info("DDP Service stopped.");
+            }
         }
     }
 }
