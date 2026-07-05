@@ -43,8 +43,8 @@
                          behaviors:TextBoxBehavior.AutoScrollToEnd="True"
                          IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto" FontFamily="Consolas" Background="#F5F5F5" Padding="5" Margin="0,0,0,60"/>
-                <Button x:Name="run_Button" Content="RUN" Command="{Binding RunDDPServiceCommand}" HorizontalAlignment="Left" Margin="10,305,0,0" Grid.Row="1" VerticalAlignment="Top" Height="44" Width="62"/>
-                <Button x:Name="stop_Button" Content="STOP" Command="{Binding StopDDPServiceCommand}" HorizontalAlignment="Left" Margin="77,305,0,0" Grid.Row="1" VerticalAlignment="Top" Height="44" Width="62"/>
+                <Button x:Name="run_Button" Content="RUN" Command="{Binding RunDDPServiceCommand}" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Bottom" Height="44" Width="62"/>
+                <Button x:Name="stop_Button" Content="STOP" Command="{Binding StopDDPServiceCommand}" HorizontalAlignment="Left" Margin="77,10,0,0" Grid.Row="1" VerticalAlignment="Bottom" Height="44" Width="62"/>
             </Grid>
 
             <Grid Grid.Column="2">
