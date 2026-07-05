@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using LED_DDP_DRIVER.ViewModels;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,7 @@ namespace LED_DDP_DRIVER
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new MainViewModel();
         }
     }
 }

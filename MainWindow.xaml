@@ -7,6 +7,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Label Content="IP Address:" HorizontalAlignment="Left" Height="11" Margin="25,35,0,0" VerticalAlignment="Top" Width="41"/>
+        <TextBox x:Name="ipAddress_TextBox" HorizontalAlignment="Left" Margin="71,28,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding IpAddress, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox x:Name="port_TextBox" HorizontalAlignment="Left" Margin="71,51,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Foreground="Gray" HorizontalAlignment="Center">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="Current settings: {0}:{1}">
+                    <Binding Path="IpAddress" />
+                    <Binding Path="Port" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <Button x:Name="run_Button" Content="RUN" HorizontalAlignment="Left" Margin="26,95,0,0" VerticalAlignment="Top" Height="66" Width="79"/>
+        <Button x:Name="stop_Button" Content="STOP" HorizontalAlignment="Left" Margin="123,95,0,0" VerticalAlignment="Top" Height="66" Width="79"/>
 
     </Grid>
 </Window>
