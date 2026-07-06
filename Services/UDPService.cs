@@ -39,11 +39,11 @@ namespace LED_DDP_DRIVER.Services
             try
             {
                 _udpClient.Send(ddpPacket, ddpPacket.Length, _destinationIp, _destinationPort);
-                Logger.Ddp("[UDP]: Sent: "+ BitConverter.ToString(ddpPacket, 10, 3));
+                Logger.Udp("Sent: "+ BitConverter.ToString(ddpPacket, 10, 3));
             }
             catch
             {
-                Logger.Ddp("[UDP]: Failed to send DDP packet.");
+                Logger.Udp("Failed to send DDP packet.");
             }
         }
     }

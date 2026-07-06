@@ -51,6 +51,7 @@ namespace LED_DDP_DRIVER.Services
             }
             catch (Exception)
             {
+                Logger.Error("Error while loading settings.");
                 return new AppConfig();
             }
         }
@@ -63,6 +64,7 @@ namespace LED_DDP_DRIVER.Services
             }
             catch (Exception)
             {
+                Logger.Error("Error while saving settings.");
             }
         }
 
@@ -80,7 +82,7 @@ namespace LED_DDP_DRIVER.Services
             }
             catch (Exception)
             {
-                // Later log to console
+                Logger.Error("Error while creating default settings.");
             }
             return defaultConfig;
         }
@@ -101,6 +103,7 @@ namespace LED_DDP_DRIVER.Services
             }
             catch
             {
+                Logger.Error("Error while loading audio settings.");
                 return new AudioConfig();
             }
         }
@@ -115,7 +118,7 @@ namespace LED_DDP_DRIVER.Services
             }
             catch (Exception ex)
             {
-                Logger.Info($"ERROR while saving audio settings: {ex.Message}");
+                Logger.Error($"Error while saving audio settings: {ex.Message}");
             }
         }
     }

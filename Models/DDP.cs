@@ -35,7 +35,7 @@ namespace LED_DDP_DRIVER.Models
         public void Stop()
         {
             _audioService.StopRecording();
-            Logger.Ddp($"[DDP] End Code: R=0. G=0, B=0");
+            Logger.Ddp($"End Code: R=0. G=0, B=0");
             _udpService.SendDdpPacket(0, 0, 0);
             WeakReferenceMessenger.Default.Send(new DdpColorMessage(0, 0, 0));
             Logger.Info("Stopped audio analysis.");
@@ -92,7 +92,7 @@ namespace LED_DDP_DRIVER.Models
             byte finalG = (byte)(colors.G * _config.MasterBrightness);
             byte finalB = (byte)(colors.B * _config.MasterBrightness);
 
-            Logger.Ddp($"[DDP] Sending: R={finalR}, G={finalG}, B={finalB}");
+            Logger.Ddp($"Sending: R={finalR}, G={finalG}, B={finalB}");
             _udpService.SendDdpPacket(finalR, finalG, finalB);
             WeakReferenceMessenger.Default.Send(new DdpColorMessage(finalR, finalG, finalB));
         }

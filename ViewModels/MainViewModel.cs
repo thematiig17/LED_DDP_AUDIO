@@ -54,7 +54,7 @@ namespace LED_DDP_DRIVER.ViewModels
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    if (message.Type == LogType.Info)
+                    if (message.Type == LogType.Info || message.Type == LogType.Warn || message.Type == LogType.Error)
                     {
                         string newInfo = InfoLogs + message.Message + Environment.NewLine;
                         if (newInfo.Length > 1000) newInfo = newInfo.Substring(newInfo.Length - 1000);
@@ -62,7 +62,7 @@ namespace LED_DDP_DRIVER.ViewModels
                         InfoLogs = newInfo;
                         OnInfoLogAdded?.Invoke();
                     }
-                    else if (message.Type == LogType.Ddp)
+                    else if (message.Type == LogType.DDP || message.Type == LogType.UDP)
                     {
                         string newDdp = DdpLogs + message.Message + Environment.NewLine;
                         if (newDdp.Length > 1000) newDdp = newDdp.Substring(newDdp.Length - 1000);
@@ -119,7 +119,7 @@ namespace LED_DDP_DRIVER.ViewModels
             {
                 if (_ddpEngine != null)
                 {
-                    Logger.Info("WARN: DDP Service is already running!");
+                    Logger.Warn("DDP Service is already running!");
                     return;
                 }
 
@@ -135,7 +135,7 @@ namespace LED_DDP_DRIVER.ViewModels
             }
             catch (Exception ex)
             {
-                Logger.Info($"ERROR DURING STARTUP: {ex.Message}");
+                Logger.Error($"Error during DDP initialization: {ex.Message}");
                 _ddpEngine = null;
             }
         }
