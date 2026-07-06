@@ -65,7 +65,7 @@ namespace LED_DDP_DRIVER.ViewModels
                     else if (message.Type == LogType.DDP || message.Type == LogType.UDP)
                     {
                         string newDdp = DdpLogs + message.Message + Environment.NewLine;
-                        if (newDdp.Length > 1000) newDdp = newDdp.Substring(newDdp.Length - 1000);
+                        if (newDdp.Length > 600) newDdp = newDdp.Substring(newDdp.Length - 600);
 
                         DdpLogs = newDdp;
                         OnDdpLogAdded?.Invoke();
